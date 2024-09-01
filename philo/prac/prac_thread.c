@@ -6,14 +6,13 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 00:45:29 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/08/30 20:43:38 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/08/31 15:44:55 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "prac.h"
 
 pthread_mutex_t mu_1;
-// pthread_mutex_t mu_2;
 static int num = 0;
 
 void *th_func(void *arg)
@@ -42,19 +41,19 @@ void *th_func2(void *arg)
     return (NULL);
 }
 
-int main(void)
-{
-    pthread_t th1;
-    pthread_t th2;
+// int main(void)
+// {
+//     pthread_t th1;
+//     pthread_t th2;
 
-    pthread_mutex_init(&mu_1, NULL);
-    if (pthread_create(&th1, NULL, th_func, NULL) == 0)
-    {
-        pthread_join(th1, NULL);
-    }
-    if (pthread_create(&th2, NULL, th_func2, NULL) == 0)
-    {
-        pthread_join(th1, NULL);
-    }
-    return (0);
-}
+//     pthread_mutex_init(&mu_1, NULL);
+//     if (pthread_create(&th1, NULL, th_func, NULL) == 0)
+//     {
+//         pthread_join(th1, NULL);
+//     }
+//     if (pthread_create(&th2, NULL, th_func2, NULL) == 0)
+//     {
+//         pthread_join(th1, NULL);
+//     }
+//     return (0);
+// }
