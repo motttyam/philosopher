@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/01 21:48:01 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/05 10:05:08 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include <sys/time.h>
 # include <time.h>
+#include  <limits.h>
 # include <unistd.h>
 
 typedef enum
@@ -62,13 +64,24 @@ typedef struct s_dining
 	t_fork			*forks;
 	int				num_of_philos;
 	int				num_of_forks;
-	int				eating_time;
-	int				sleeping_time;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
 	int				must_eat;
 	int				all_ate;
 	int				is_alive;
 }	t_dining;
 
-int	arguments_error(void);
+// error
+int	arguments_error(int argc, char **argv);
+
+// utils
+int	ft_atoi(const char *str);
+size_t	ft_strlen(const char *s);
+int	ft_isdigit(int c);
+int ft_strdigit(char *str);
+
+// test
+void test_handle_arguments(t_dining *dining);
 
 #endif

@@ -3,36 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktsukamo <ktsukamo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 11:00:42 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/04/21 18:19:50 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/05 00:30:00 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft.h"
-
-int	ft_atoi(const char *str)
-{
-	long long	symbol;
-	long long	num;
-
-	num = 0;
-	symbol = 1;
-	while (*str == ' ' || (*str >= 9 && *str <= 13))
-		str++;
-	if (*str == '+' || *str == '-')
-	{
-		if (*str == '-')
-			symbol = -symbol;
-		str++;
-	}
-	if (symbol == 1)
-		num = ft_is_overflow(str, 0);
-	else if (symbol == -1)
-		num = ft_is_underflow(str, 0);
-	return ((int)num);
-}
+#include "philo.h"
 
 long long	ft_is_overflow(const char *str, long long num)
 {
@@ -62,4 +40,26 @@ long long	ft_is_underflow(const char *str, long long num)
 			return ((int)LONG_MIN);
 	}
 	return (-1 * num);
+}
+
+int	ft_atoi(const char *str)
+{
+	long long	symbol;
+	long long	num;
+
+	num = 0;
+	symbol = 1;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '+' || *str == '-')
+	{
+		if (*str == '-')
+			symbol = -symbol;
+		str++;
+	}
+	if (symbol == 1)
+		num = ft_is_overflow(str, 0);
+	else if (symbol == -1)
+		num = ft_is_underflow(str, 0);
+	return ((int)num);
 }
