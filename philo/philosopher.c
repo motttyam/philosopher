@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:58:32 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/05 10:07:41 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/05 22:42:33 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int handle_arguments(int argc, char **argv, t_dining *dining)
 		&& ft_strdigit(argv[3]) == 1 && ft_strdigit(argv[4]) == 1)
 	{
 		dining->num_of_philos = ft_atoi(argv[1]);
-		dining->num_of_forks = dining->num_of_philos;
 		dining->time_to_die = ft_atoi(argv[2]);
 		dining->time_to_eat = ft_atoi(argv[3]);
 		dining->time_to_sleep = ft_atoi(argv[4]);
@@ -39,7 +38,6 @@ void init_dining(t_dining *dining)
 	dining->philos = NULL;
 	dining->forks = NULL;
 	dining->num_of_philos = 0;
-	dining->num_of_forks = 0;
 	dining->time_to_die = 0;
 	dining->time_to_eat = 0;
 	dining->time_to_sleep = 0;
@@ -59,7 +57,13 @@ int	main(int argc, char *argv[])
 	if (handle_arguments(argc, argv, &dining) == -1)
 		return (arguments_error(argc, argv), -1);
 	launch_dining_philosopher(&dining);
-	
-	test_handle_arguments(&dining);
+
+	// freeする
+	if (dining.forks != NULL)
+		free(dining.forks);
+	if (dining.philos != NULL)
+		free(dining.philos);
+	// test関数
+	// test_handle_arguments(&dining);
 	return (0);
 }

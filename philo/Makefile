@@ -1,5 +1,5 @@
 CC = gcc
-# CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra
 PTHREAD = -pthread
 
 SRCS = $(wildcard *.c)
