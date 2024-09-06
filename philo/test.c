@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:02:06 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/05 22:36:46 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/06 09:52:54 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,12 @@ void	test_handle_arguments(t_dining *dining)
 void	print_fork(t_fork *fork)
 {
 	printf("Fork id: %d\n", fork->fork_id);
-	printf("Owner id: %d\n", fork->owner_id);
 	printf("Fork state: %d\n", fork->fork_state);
 }
 
 void	print_philo(t_philo *philo)
 {
 	printf("Philo id: %d\n", philo->philo_id);
-	printf("Left fork: %p\n", (void *)philo->l_fork);
-	printf("Right fork: %p\n", (void *)philo->r_fork);
 	printf("Eaten count: %d\n", philo->eaten_count);
 	printf("Is alive: %d\n", philo->is_alive);
 }
@@ -41,6 +38,7 @@ void	print_philo(t_philo *philo)
 void	print_dining(t_dining *dining)
 {
 	printf("Number of philosophers: %d\n", dining->num_of_philos);
+	printf("Start time: %ld\n", dining->start_time);
 	printf("Time to die: %d\n", dining->time_to_die);
 	printf("Time to eat: %d\n", dining->time_to_eat);
 	printf("Time to sleep: %d\n", dining->time_to_sleep);

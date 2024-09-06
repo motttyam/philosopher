@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/05 22:59:32 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/06 09:54:25 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,16 @@ typedef enum
 typedef struct s_fork
 {
 	int				fork_id;
-	int				owner_id;
 	int				fork_state;
 	pthread_mutex_t	lock;
 }					t_fork;
 
 typedef struct s_philo
 {
-	int				philo_id;
-	t_fork			*l_fork;
-	t_fork			*r_fork;
-	pthread_t		th;
 	void	 		*ptr_dining;
+	t_fork			*forks;
+	pthread_t		th;
+	int				philo_id;
 	int				eaten_count;
 	int				is_alive;
 }					t_philo;
@@ -63,6 +61,8 @@ typedef struct s_dining
 {
 	t_philo			*philos;
 	t_fork			*forks;
+	struct timeval 	tv;
+	long			start_time;
 	int				num_of_philos;
 	int				time_to_die;
 	int				time_to_eat;

@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/05 23:06:58 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/06 10:43:56 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,10 @@ int	init_forks(t_dining *dining)
 	// 成功したときは構造体の配列を初期化する
 	else
 	{
-		memset(dining->forks, 0, sizeof(dining->forks) * dining->num_of_philos);
+		memset(dining->forks, 0, sizeof(t_fork) * dining->num_of_philos);
 		while (i < dining->num_of_philos)
 		{
 			dining->forks[i].fork_id = i;
-			dining->forks[i].owner_id = -1;
 			dining->forks[i].fork_state = DIRTY;
 			pthread_mutex_init(&dining->forks[i].lock, NULL);
 			i++;
@@ -58,8 +57,7 @@ int	init_philosophers(t_dining *dining)
 	// 成功したときは構造体の配列を初期化する
 	else
 	{
-		memset(dining->forks, 0, sizeof(dining->philos)
-			* dining->num_of_philos);
+		memset(dining->philos, 0, sizeof(t_philo) * dining->num_of_philos);
 		while (i < dining->num_of_philos)
 		{
 			dining->philos[i].philo_id = i;
@@ -68,6 +66,7 @@ int	init_philosophers(t_dining *dining)
             dining->philos[i].ptr_dining = (void *)dining;
 			dining->philos[i].eaten_count = 0;
 			dining->philos[i].is_alive = IS_ALIVE;
+			printf("i:%d\n", i);
 			i++;
 		}
 	}
@@ -76,11 +75,14 @@ int	init_philosophers(t_dining *dining)
 
 void	*th_philosopher(void *philo)
 {
-	if (((t_philo *)philo)->philo_id % 2 == 0)
-        usleep(1);
+	// test
+	// if (((t_philo *)philo)->philo_id % 2 == 0)
+	printf("[%d] thread created\n", ((t_philo *)philo)->philo_id);
+	
     // eat();
 	// sleep();
 	// think();
+	printf("[%d] thread finished\n", ((t_philo *)philo)->philo_id);
 	return (NULL);
 }
 void	launch_dining_philosopher(t_dining *dining)
@@ -92,19 +94,34 @@ void	launch_dining_philosopher(t_dining *dining)
 	// fork と philos のメモリを動的に取得
 	if (init_forks(dining) == -1 || init_philosophers(dining) == -1)
 		return ;
+	// 現在の時刻を取得
+	gettimeofday(&dining->tv, NULL);
+	dining->start_time = dining->tv.tv_sec + dining->tv.tv_usec;
 	// test関数
 	print_dining(dining);
-	// // threadを立ち上げる（偶数は遅らせるなどしたほうが良い..?）
+	// threadを立ち上げる（偶数は遅らせるなどしたほうが良い..?）
 	while (i < dining->num_of_philos)
 	{
 		philo = &dining->philos[i];
 		if (pthread_create(&dining->philos[i].th, NULL, th_philosopher,
 				philo) == 0)
         {            
-			pthread_detach(philo->th);
+			// detachだと最後のスレッドのみ正しく出力されない
+			// pthread_detach(philo->th);
+    		printf("thread[%d] created in main\n", i);
+			usleep(1);
         }
 		else
-			return ;
+		{
+    		perror("pthread_create failed");
+    		return;
+		}
 		i++;
+		// printf("i:%d\n", i);
 	}
+	// ここでjoinしてあげると、正しく動く
+	for (i = 0; i < dining->num_of_philos; i++)
+    {
+        pthread_join(dining->philos[i].th, NULL);
+    }
 }
