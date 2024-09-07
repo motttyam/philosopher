@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   func_test.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:02:06 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/06 09:52:54 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/07 15:47:42 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	print_philo(t_philo *philo)
 	printf("Philo id: %d\n", philo->philo_id);
 	printf("Eaten count: %d\n", philo->eaten_count);
 	printf("Is alive: %d\n", philo->is_alive);
+		printf("Left fork id: %d\n", philo->l_fork->fork_id);
+	printf("Right fork id: %d\n", philo->r_fork->fork_id);
 }
 
 void	print_dining(t_dining *dining)

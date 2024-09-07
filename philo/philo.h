@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/06 09:54:25 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/07 15:39:34 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	void	 		*ptr_dining;
-	t_fork			*forks;
+	void			*ptr_dining;
+	t_fork			*l_fork;
+	t_fork 			*r_fork;
 	pthread_t		th;
 	int				philo_id;
 	int				eaten_count;
@@ -61,7 +62,7 @@ typedef struct s_dining
 {
 	t_philo			*philos;
 	t_fork			*forks;
-	struct timeval 	tv;
+	struct timeval	tv;
 	long			start_time;
 	int				num_of_philos;
 	int				time_to_die;
@@ -72,8 +73,14 @@ typedef struct s_dining
 	int				is_alive;
 }					t_dining;
 
+// init_dining
+void				init_dining(t_dining *dining);
+int					init_forks(t_dining *dining);
+int					init_philosophers(t_dining *dining);
+
 // dining_philosopher
-void	launch_dining_philosopher(t_dining *dining);
+void				*th_philosopher(void *philo);
+void				launch_dining_philosopher(t_dining *dining);
 
 // error
 int					arguments_error(int argc, char **argv);
