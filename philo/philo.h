@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/19 21:20:13 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:51:56 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ typedef enum
 
 typedef enum
 {
-	NO,
-	YES
+	NOT_ATE = 0,
+	ATE
 }					all_ate;
 
 typedef enum
@@ -39,6 +39,12 @@ typedef enum
 	IS_ALIVE = 0,
 	IS_DEATH
 }					death_flag;
+
+typedef enum
+{
+	NOT_THINK = 0,
+	THINKING,
+}					think_flag;
 
 typedef struct s_fork
 {
@@ -54,6 +60,7 @@ typedef struct s_philo
 	t_fork			*r_fork;
 	pthread_t		th;
 	int				philo_id;
+	int 			think_flag;
 	int				eaten_count;
 	int				is_alive;
 }					t_philo;
