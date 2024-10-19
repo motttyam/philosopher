@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/07 15:39:34 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:20:13 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_philo
 {
 	void			*ptr_dining;
 	t_fork			*l_fork;
-	t_fork 			*r_fork;
+	t_fork			*r_fork;
 	pthread_t		th;
 	int				philo_id;
 	int				eaten_count;
@@ -62,7 +62,6 @@ typedef struct s_dining
 {
 	t_philo			*philos;
 	t_fork			*forks;
-	struct timeval	tv;
 	long			start_time;
 	int				num_of_philos;
 	int				time_to_die;
@@ -73,14 +72,22 @@ typedef struct s_dining
 	int				is_alive;
 }					t_dining;
 
+// main
+void				launch_dining_philosopher(t_dining *dining);
+
+// handling
+int					handle_arguments(int argc, char **argv, t_dining *dining);
+
 // init_dining
 void				init_dining(t_dining *dining);
 int					init_forks(t_dining *dining);
 int					init_philosophers(t_dining *dining);
 
-// dining_philosopher
+// philosopher
+long				timestamp(t_philo *philo);
+void				ft_eat(t_philo *philo);
+void				ft_sleep(t_philo *philo);
 void				*th_philosopher(void *philo);
-void				launch_dining_philosopher(t_dining *dining);
 
 // error
 int					arguments_error(int argc, char **argv);

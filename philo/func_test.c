@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:02:06 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/07 15:47:42 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/19 19:31:20 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	print_philo(t_philo *philo)
 
 void	print_dining(t_dining *dining)
 {
-	printf("Number of philosophers: %d\n", dining->num_of_philos);
+	printf("\nNumber of philosophers: %d\n", dining->num_of_philos);
 	printf("Start time: %ld\n", dining->start_time);
 	printf("Time to die: %d\n", dining->time_to_die);
 	printf("Time to eat: %d\n", dining->time_to_eat);
@@ -59,4 +59,5 @@ void	print_dining(t_dining *dining)
 	{
 		print_philo(&dining->philos[i]);
 	}
+	printf("\n");
 }

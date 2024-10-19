@@ -6,20 +6,22 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/07 17:00:25 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:33:32 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	timestamp(t_philo *philo)
+void	*th_philosopher(void *philo)
 {
-	struct timeval	tv;
-	long			current_time;
-
-	gettimeofday(&tv, NULL);
-	current_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-	return (current_time - ((t_dining *)philo->ptr_dining)->start_time);
+	// test
+	if (((t_philo *)philo)->philo_id % 2 != 0)
+		usleep(500);
+	printf("[%d] thread created\n", ((t_philo *)philo)->philo_id);
+	ft_eat(philo);
+	ft_sleep(philo);
+	printf("[%d] thread finished\n", ((t_philo *)philo)->philo_id);
+	return (NULL);
 }
 
 void	ft_eat(t_philo *philo)
@@ -34,8 +36,8 @@ void	ft_eat(t_philo *philo)
 		{
 			philo->r_fork->fork_state = CLEAN;
 			pthread_mutex_lock(&philo->r_fork->lock);
-			printf("%ld %d has taken a fork\n", timestamp(philo),
-				philo->philo_id);
+			printf("%ld %d has taken a %d fork\n", timestamp(philo),
+				philo->philo_id, philo->r_fork->fork_id);
 			break;
 		}
 		if (i++ == 0)
@@ -49,8 +51,8 @@ void	ft_eat(t_philo *philo)
 		{
 			philo->l_fork->fork_state = CLEAN;
 			pthread_mutex_lock(&philo->l_fork->lock);
-			printf("%ld %d has taken a fork\n", timestamp(philo),
-				philo->philo_id);
+			printf("%ld %d has taken a %d fork\n", timestamp(philo),
+				philo->philo_id, philo->l_fork->fork_id);
 			break;
 		}
 		// if (i++ == 0)
@@ -59,7 +61,7 @@ void	ft_eat(t_philo *philo)
 	}
 	// left forkの取得
 	printf("%ld %d is eating\n", timestamp(philo), philo->philo_id);
-	usleep(((t_dining *)philo->ptr_dining)->time_to_eat);
+	usleep(((t_dining *)philo->ptr_dining)->time_to_eat * 1000);
 	pthread_mutex_unlock(&philo->l_fork->lock);
 	philo->l_fork->fork_state = DIRTY;
 	pthread_mutex_unlock(&philo->r_fork->lock);
@@ -69,58 +71,6 @@ void	ft_eat(t_philo *philo)
 void	ft_sleep(t_philo *philo)
 {
 	printf("%ld %d is sleeping\n", timestamp(philo), philo->philo_id);
-	usleep(((t_dining *)philo->ptr_dining)->time_to_sleep);
+	usleep(((t_dining *)philo->ptr_dining)->time_to_sleep * 1000);
 	return ;
-}
-
-void	*th_philosopher(void *philo)
-{
-	// test
-	printf("[%d] thread created\n", ((t_philo *)philo)->philo_id);
-	if (((t_philo *)philo)->philo_id % 2 != 0)
-		usleep(100);
-	ft_eat(philo);
-	ft_sleep(philo);
-	printf("[%d] thread finished\n", ((t_philo *)philo)->philo_id);
-	return (NULL);
-}
-void	launch_dining_philosopher(t_dining *dining)
-{
-	int i;
-	t_philo *philo;
-
-	i = 0;
-	// fork と philos のメモリを動的に取得
-	if (init_forks(dining) == -1 || init_philosophers(dining) == -1)
-		return ;
-	// 現在の時刻を取得
-	gettimeofday(&dining->tv, NULL);
-	dining->start_time = dining->tv.tv_sec * 1000 + dining->tv.tv_usec / 1000;
-	// test関数
-	print_dining(dining);
-	// threadを立ち上げる（偶数は遅らせるなどしたほうが良い..?）
-	while (i < dining->num_of_philos)
-	{
-		philo = &dining->philos[i];
-		if (pthread_create(&dining->philos[i].th, NULL, th_philosopher,
-				philo) == 0)
-		{
-			// detachだと最後のスレッドのみ正しく出力されない
-			// pthread_detach(philo->th);
-			// printf("thread[%d] created in main\n", i);
-			// usleep(1);
-		}
-		else
-		{
-			perror("pthread_create failed");
-			return ;
-		}
-		i++;
-		// printf("i:%d\n", i);
-	}
-	// ここでjoinしてあげると、正しく動く
-	for (i = 0; i < dining->num_of_philos; i++)
-	{
-		pthread_join(dining->philos[i].th, NULL);
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:26 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/07 15:50:27 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:34:36 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,11 @@ int	init_philosophers(t_dining *dining)
 			dining->philos[i].ptr_dining = (void *)dining;
 			dining->philos[i].eaten_count = 0;
 			dining->philos[i].is_alive = IS_ALIVE;
-			dining->philos[i].l_fork = &dining->forks[i];
+			dining->philos[i].r_fork = &dining->forks[i];
 			if (i + 1 == dining->num_of_philos)
-				dining->philos[i].r_fork = &dining->forks[0];
+				dining->philos[i].l_fork = &dining->forks[0];
 			else
-				dining->philos[i].r_fork = &dining->forks[i + 1];
-			printf("i:%d\n", i);
+				dining->philos[i].l_fork = &dining->forks[i + 1];
 			i++;
 		}
 	}
