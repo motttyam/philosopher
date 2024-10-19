@@ -21,7 +21,7 @@ clean:
 	rm -f $(OBJS)
 
 fclean: clean
-	rm -rf $(NAME) tests
+	rm -rf $(NAME) tests *.txt
 
 re: fclean all
 

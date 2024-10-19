@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/19 22:34:23 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/19 22:49:52 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,10 @@ void	ft_eat(t_philo *philo)
 		{
 			philo->r_fork->fork_state = CLEAN;
 			pthread_mutex_lock(&philo->r_fork->lock);
-			printf("%ld %d has taken a %d fork\n", timestamp(philo),
-				philo->philo_id, philo->r_fork->fork_id);
+			printf("%ld %d has taken a fork\n", timestamp(philo),
+				philo->philo_id);
+			// printf("%ld %d has taken a %d fork\n", timestamp(philo),
+			// 	philo->philo_id, philo->r_fork->fork_id);
 			break ;
 		}
 		if (philo->think_flag == NOT_THINK)
@@ -54,8 +56,10 @@ void	ft_eat(t_philo *philo)
 		{
 			philo->l_fork->fork_state = CLEAN;
 			pthread_mutex_lock(&philo->l_fork->lock);
-			printf("%ld %d has taken a %d fork\n", timestamp(philo),
-				philo->philo_id, philo->l_fork->fork_id);
+			printf("%ld %d has taken a fork\n", timestamp(philo),
+				philo->philo_id);
+			// printf("%ld %d has taken a %d fork\n", timestamp(philo),
+			// 	philo->philo_id, philo->l_fork->fork_id);
 			break ;
 		}
 		if (philo->think_flag == NOT_THINK)
