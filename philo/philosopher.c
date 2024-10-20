@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/19 22:49:52 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:06:07 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,19 @@
 
 void	*th_philosopher(void *philo)
 {
-	// test
 	if (((t_philo *)philo)->philo_id % 2 != 0)
 		usleep(500);
-	// printf("[%d] thread created\n", ((t_philo *)philo)->philo_id);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 3; i++)
 	{
+		ft_think(philo);
 		ft_eat(philo);
 		ft_sleep(philo);
 	}
-	// printf("[%d] thread finished\n", ((t_philo *)philo)->philo_id);
 	return (NULL);
 }
 
-void	ft_eat(t_philo *philo)
+void	ft_think(t_philo *philo)
 {
-	// right forkの取得
 	while (1)
 	{
 		if (philo->r_fork->fork_state == DIRTY)
@@ -69,10 +66,17 @@ void	ft_eat(t_philo *philo)
 		}
 		usleep(10);
 	}
-	// left forkの取得
+}
+
+void	ft_eat(t_philo *philo)
+{
+	// 食事を行うので、meal_timeを更新
+	philo->meal_timelog = timestamp(philo);
+	printf("\nphilo %d meal_timelog: %ld\n", philo->philo_id, philo->meal_timelog);
+	// 食事を行う
 	printf("%ld %d is eating\n", timestamp(philo), philo->philo_id);
 	usleep(((t_dining *)philo->ptr_dining)->time_to_eat * 1000);
-	// mutexをlockし、think_flagを初期化する
+	// mutexをunlockし、think_flagを初期化する
 	pthread_mutex_unlock(&philo->r_fork->lock);
 	philo->r_fork->fork_state = DIRTY;
 	pthread_mutex_unlock(&philo->l_fork->lock);

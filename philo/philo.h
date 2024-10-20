@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/19 21:51:56 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:50:37 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_philo
 	t_fork			*r_fork;
 	pthread_t		th;
 	int				philo_id;
+	long			meal_timelog;
 	int 			think_flag;
 	int				eaten_count;
 	int				is_alive;
@@ -81,6 +82,7 @@ typedef struct s_dining
 
 // main
 void				launch_dining_philosopher(t_dining *dining);
+long				timestamp(t_philo *philo);
 
 // handling
 int					handle_arguments(int argc, char **argv, t_dining *dining);
@@ -91,10 +93,10 @@ int					init_forks(t_dining *dining);
 int					init_philosophers(t_dining *dining);
 
 // philosopher
-long				timestamp(t_philo *philo);
+void				*th_philosopher(void *philo);
+void				ft_think(t_philo *philo);
 void				ft_eat(t_philo *philo);
 void				ft_sleep(t_philo *philo);
-void				*th_philosopher(void *philo);
 
 // error
 int					arguments_error(int argc, char **argv);

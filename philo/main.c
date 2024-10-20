@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:58:32 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/19 21:31:30 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:59:43 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,6 @@ void	launch_dining_philosopher(t_dining *dining)
 	// fork と philos のメモリを動的に取得
 	if (init_forks(dining) == -1 || init_philosophers(dining) == -1)
 		return ;
-	// test
-	print_dining(dining);
-
 	// 現在の時刻を取得
 	dining->start_time = timestamp(&dining->philos[i]);
 	
@@ -57,14 +54,8 @@ void	launch_dining_philosopher(t_dining *dining)
 	{
 		philo = &dining->philos[i];
 		if (pthread_create(&dining->philos[i].th, NULL, th_philosopher,
-				philo) == 0)
-		{	
-		}
-		else
-		{
-			perror("pthread_create failed");
-			return ;
-		}
+				philo) != 0)
+			return (perror("pthread_create failed"));
 		i++;
 	}
 	// ここでjoinしてあげると、正しく動く
