@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/20 17:06:07 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:49:28 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	*th_philosopher(void *philo)
 	for (int i = 0; i < 3; i++)
 	{
 		ft_think(philo);
-		ft_eat(philo);
+		if (ft_eat(philo) == 1)
+			break ;
 		ft_sleep(philo);
 	}
 	return (NULL);
@@ -68,8 +69,13 @@ void	ft_think(t_philo *philo)
 	}
 }
 
-void	ft_eat(t_philo *philo)
+int	ft_eat(t_philo *philo)
 {
+	// 行動する前に死亡フラグを立てるかどうか
+	if(philo->is_alive == IS_DEAD)
+		return (printf("%ld %d died\n", timestamp(philo), philo->philo_id), 1);
+	else if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
+		return (1);
 	// 食事を行うので、meal_timeを更新
 	philo->meal_timelog = timestamp(philo);
 	printf("\nphilo %d meal_timelog: %ld\n", philo->philo_id, philo->meal_timelog);
@@ -82,6 +88,7 @@ void	ft_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->l_fork->lock);
 	philo->l_fork->fork_state = DIRTY;
 	philo->think_flag = NOT_THINK;
+	return (0);
 }
 
 void	ft_sleep(t_philo *philo)

@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:26 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/20 17:00:25 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:43:30 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	init_dining(t_dining *dining)
 	dining->must_eat = 0;
 	dining->all_ate = NOT_ATE;
 	dining->is_alive = IS_ALIVE;
+	pthread_mutex_init(&dining->alive_lock, NULL);
 }
 
 int	init_forks(t_dining *dining)
@@ -76,6 +77,7 @@ int	init_philosophers(t_dining *dining)
 			dining->philos[i].philo_id = i;
 			dining->philos[i].think_flag = NOT_THINK;
 			dining->philos[i].meal_timelog = 0;
+			pthread_mutex_init(&dining->philos[i].alive_lock, NULL);
 			dining->philos[i].ptr_dining = (void *)dining;
 			dining->philos[i].eaten_count = 0;
 			dining->philos[i].is_alive = IS_ALIVE;

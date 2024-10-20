@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/20 16:50:37 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:45:47 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef enum
 typedef enum
 {
 	IS_ALIVE = 0,
-	IS_DEATH
+	IS_DEAD
 }					death_flag;
 
 typedef enum
@@ -64,6 +64,7 @@ typedef struct s_philo
 	int 			think_flag;
 	int				eaten_count;
 	int				is_alive;
+	pthread_mutex_t	alive_lock;
 }					t_philo;
 
 typedef struct s_dining
@@ -78,6 +79,7 @@ typedef struct s_dining
 	int				must_eat;
 	int				all_ate;
 	int				is_alive;
+	pthread_mutex_t	alive_lock;
 }					t_dining;
 
 // main
@@ -95,7 +97,7 @@ int					init_philosophers(t_dining *dining);
 // philosopher
 void				*th_philosopher(void *philo);
 void				ft_think(t_philo *philo);
-void				ft_eat(t_philo *philo);
+int					ft_eat(t_philo *philo);
 void				ft_sleep(t_philo *philo);
 
 // error
