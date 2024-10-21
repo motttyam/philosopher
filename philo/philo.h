@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/20 17:45:47 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/10/21 10:39:52 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct s_philo
 	pthread_t		th;
 	int				philo_id;
 	long			meal_timelog;
-	int 			think_flag;
+	int				think_flag;
 	int				eaten_count;
 	int				is_alive;
 	pthread_mutex_t	alive_lock;
@@ -96,9 +96,9 @@ int					init_philosophers(t_dining *dining);
 
 // philosopher
 void				*th_philosopher(void *philo);
-void				ft_think(t_philo *philo);
 int					ft_eat(t_philo *philo);
-void				ft_sleep(t_philo *philo);
+int					ft_think(t_philo *philo);
+int					ft_sleep(t_philo *philo);
 
 // error
 int					arguments_error(int argc, char **argv);
