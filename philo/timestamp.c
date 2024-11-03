@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   timestamp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 18:50:47 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/03 23:13:35 by ktsukamo         ###   ########.fr       */
+/*   Created: 2024/11/04 00:02:19 by ktsukamo          #+#    #+#             */
+/*   Updated: 2024/11/04 00:02:29 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-size_t	ft_strlen(const char *s)
+long	timestamp(t_philo *philo)
 {
-	size_t	length;
+	struct timeval	tv;
+	long			current_time;
 
-	length = 0;
-	while (s[length] != '\0')
-	{
-		length++;
-	}
-	return (length);
+	gettimeofday(&tv, NULL);
+	current_time = (tv.tv_sec * 1000L) + (tv.tv_usec / 1000L);
+	return (current_time - ((t_dining *)philo->ptr_dining)->start_time);
 }

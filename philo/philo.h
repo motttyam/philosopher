@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/03 22:33:54 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/04 00:02:55 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,29 @@
 # include <time.h>
 # include <unistd.h>
 
-typedef enum
+typedef enum e_fork_state
 {
 	DIRTY = 0,
 	CLEAN
-}					fork_state;
+}					t_fork_state;
 
-typedef enum
+typedef enum e_ate_state
 {
 	NOT_ATE = 0,
 	ATE
-}					all_ate;
+}					t_ate_state;
 
-typedef enum
+typedef enum e_death_state
 {
 	IS_ALIVE = 0,
 	IS_DEAD
-}					death_flag;
+}					t_death_state;
 
-typedef enum
+typedef enum e_think_state
 {
 	NOT_THINK = 0,
 	THINKING,
-}					think_flag;
+}					t_think_state;
 
 typedef struct s_fork
 {
@@ -86,8 +86,7 @@ typedef struct s_dining
 
 // main
 void				launch_dining_philosopher(t_dining *dining);
-void				monitor_philosophers(t_dining *dining);
-long				timestamp(t_philo *philo);
+void				*th_philosopher(void *philo);
 
 // handling
 int					handle_arguments(int argc, char **argv, t_dining *dining);
@@ -97,12 +96,20 @@ int					handle_dining_conditions(t_dining *dining);
 void				init_dining(t_dining *dining);
 int					init_forks(t_dining *dining);
 int					init_philosophers(t_dining *dining);
+void				init_each_philosopher(t_dining *dining, int *i);
 
 // philosopher
-void				*th_philosopher(void *philo);
-int					ft_eat(t_philo *philo);
-int					ft_think(t_philo *philo);
+int					take_forks(t_philo *philo);
+int					take_a_fork(t_philo *philo, t_fork *fork);
+int					think(t_philo *philo);
+int					eat(t_philo *philo);
 int					ft_sleep(t_philo *philo);
+
+// monitoring
+void				monitor_philosophers(t_dining *dining);
+int					monitor_philosopher_death_state(t_dining *dining,
+						t_philo *philo);
+int					monitor_philosopher_eat_state(t_dining *dining, int ate);
 
 // error
 int					arguments_error(int argc, char **argv);
@@ -112,6 +119,7 @@ int					ft_atoi(const char *str);
 size_t				ft_strlen(const char *s);
 int					ft_isdigit(int c);
 int					ft_strdigit(char *str);
+long				timestamp(t_philo *philo);
 
 // test
 void				test_handle_arguments(t_dining *dining);

@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:25:45 by motttyam          #+#    #+#             */
-/*   Updated: 2024/09/05 00:12:37 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/03 23:16:14 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,20 @@ int	ft_isdigit(int c)
 		return (0);
 }
 
-int ft_strdigit(char *str)
+int	ft_strdigit(char *str)
 {
-	int len;
-	int i;
+	int	len;
+	int	i;
 
-	if(str == NULL)
+	if (str == NULL)
 		return (0);
 	i = 0;
 	len = ft_strlen(str);
 	while (i < len)
 	{
-		if(ft_isdigit((int)str[i]) == 0)
+		if (ft_isdigit((int)str[i]) == 0)
 			return (0);
 		i++;
 	}
 	return (1);
 }
-
