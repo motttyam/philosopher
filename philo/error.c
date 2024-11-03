@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 21:03:30 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/05 10:04:10 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/09/07 15:27:49 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	arguments_error(int argc, char **argv)
 {
-	
 	printf("[WARNING]\n");
 	printf("You should put the following 5 or 6 arguments on this program\n");
 	printf("number_of_philosophers time_to_die time_to_eat time_to_sleep ");
@@ -27,8 +26,7 @@ int	arguments_error(int argc, char **argv)
 	printf("some of arguments(at least one) are not valid\n");
 	for (int i = 0; i < argc; i++)
 	{
-	printf("%s\n", argv[i]);
+		printf("%s\n", argv[i]);
 	}
-	
 	return (-1);
 }

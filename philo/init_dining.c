@@ -1,16 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dining_philosopher.c                               :+:      :+:    :+:   */
+/*   init_dining.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/06 10:43:56 by ktsukamo         ###   ########.fr       */
+/*   Created: 2024/09/07 15:34:26 by ktsukamo          #+#    #+#             */
+/*   Updated: 2024/11/03 22:36:40 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	init_dining(t_dining *dining)
+{
+	dining->philos = NULL;
+	dining->forks = NULL;
+	dining->num_of_philos = -1;
+	dining->time_to_die = -1;
+	dining->time_to_eat = 0;
+	dining->time_to_sleep = 0;
+	dining->must_eat = -1;
+	dining->all_ate = NOT_ATE;
+	dining->is_alive = IS_ALIVE;
+	pthread_mutex_init(&dining->alive_lock, NULL);
+	pthread_mutex_init(&dining->all_ate_lock, NULL);
+}
 
 int	init_forks(t_dining *dining)
 {
@@ -41,7 +56,7 @@ int	init_forks(t_dining *dining)
 
 int	init_philosophers(t_dining *dining)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	// 必要か不明だが、200以上は弾いておく
@@ -61,67 +76,20 @@ int	init_philosophers(t_dining *dining)
 		while (i < dining->num_of_philos)
 		{
 			dining->philos[i].philo_id = i;
-			// dining->philos[i].l_fork = NULL;
-			// dining->philos[i].r_fork = NULL;
-            dining->philos[i].ptr_dining = (void *)dining;
+			dining->philos[i].think_flag = NOT_THINK;
+			dining->philos[i].meal_timelog = 0;
+			pthread_mutex_init(&dining->philos[i].alive_lock, NULL);
+			pthread_mutex_init(&dining->philos[i].eaten_count_lock, NULL);
+			dining->philos[i].ptr_dining = (void *)dining;
 			dining->philos[i].eaten_count = 0;
 			dining->philos[i].is_alive = IS_ALIVE;
-			printf("i:%d\n", i);
+			dining->philos[i].r_fork = &dining->forks[i];
+			if (i + 1 == dining->num_of_philos)
+				dining->philos[i].l_fork = &dining->forks[0];
+			else
+				dining->philos[i].l_fork = &dining->forks[i + 1];
 			i++;
 		}
 	}
 	return (0);
-}
-
-void	*th_philosopher(void *philo)
-{
-	// test
-	// if (((t_philo *)philo)->philo_id % 2 == 0)
-	printf("[%d] thread created\n", ((t_philo *)philo)->philo_id);
-	
-    // eat();
-	// sleep();
-	// think();
-	printf("[%d] thread finished\n", ((t_philo *)philo)->philo_id);
-	return (NULL);
-}
-void	launch_dining_philosopher(t_dining *dining)
-{
-	int i;
-	t_philo *philo;
-
-	i = 0;
-	// fork と philos のメモリを動的に取得
-	if (init_forks(dining) == -1 || init_philosophers(dining) == -1)
-		return ;
-	// 現在の時刻を取得
-	gettimeofday(&dining->tv, NULL);
-	dining->start_time = dining->tv.tv_sec + dining->tv.tv_usec;
-	// test関数
-	print_dining(dining);
-	// threadを立ち上げる（偶数は遅らせるなどしたほうが良い..?）
-	while (i < dining->num_of_philos)
-	{
-		philo = &dining->philos[i];
-		if (pthread_create(&dining->philos[i].th, NULL, th_philosopher,
-				philo) == 0)
-        {            
-			// detachだと最後のスレッドのみ正しく出力されない
-			// pthread_detach(philo->th);
-    		printf("thread[%d] created in main\n", i);
-			usleep(1);
-        }
-		else
-		{
-    		perror("pthread_create failed");
-    		return;
-		}
-		i++;
-		// printf("i:%d\n", i);
-	}
-	// ここでjoinしてあげると、正しく動く
-	for (i = 0; i < dining->num_of_philos; i++)
-    {
-        pthread_join(dining->philos[i].th, NULL);
-    }
 }

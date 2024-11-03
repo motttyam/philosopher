@@ -1,69 +1,140 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   philosopher.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/01 20:58:32 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/09/05 22:42:33 by ktsukamo         ###   ########.fr       */
+/*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
+/*   Updated: 2024/11/03 21:59:24 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int handle_arguments(int argc, char **argv, t_dining *dining)
+void	*th_philosopher(void *philo)
 {
-	// char philo,  number_of_philosophers,  time_to_die,  time_to_eat,  time_to_sleep");
-	// (number_of_times_each_philosopher_must_eat)
-	if(ft_strdigit(argv[1]) == 1 && ft_strdigit(argv[2]) == 1 
-		&& ft_strdigit(argv[3]) == 1 && ft_strdigit(argv[4]) == 1)
+	if (((t_philo *)philo)->philo_id % 2 != 0)
+		usleep(500);
+	while (1)
 	{
-		dining->num_of_philos = ft_atoi(argv[1]);
-		dining->time_to_die = ft_atoi(argv[2]);
-		dining->time_to_eat = ft_atoi(argv[3]);
-		dining->time_to_sleep = ft_atoi(argv[4]);
-		if(argc == 6 && ft_strdigit(argv[5]) == 1)
-			dining->must_eat = ft_atoi(argv[5]);
+		if (ft_think(philo) == 1)
+			break ;
+		if (ft_eat(philo) == 1)
+			break ;
+		if (ft_sleep(philo) == 1)
+			break ;
 	}
-	else
+	return (NULL);
+}
+
+int	ft_think(t_philo *philo)
+{
+	while (1)
 	{
-		return (-1);
+		// 行動する前に死亡フラグを立てるかどうか
+		if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+			|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
+			return (1);
+		//
+		if (philo->r_fork->fork_state == DIRTY)
+		{
+			//　forkを取得
+			philo->r_fork->fork_state = CLEAN;
+			pthread_mutex_lock(&philo->r_fork->lock);
+			printf("%ld %d has taken a fork\n", timestamp(philo),
+				philo->philo_id);
+			// debug用で、forkのidを表示できる
+			// printf("%ld %d has taken a %d fork\n", timestamp(philo),
+			// 	philo->philo_id, philo->r_fork->fork_id);
+			break ;
+		}
+		if (philo->think_flag == NOT_THINK)
+		{
+			// 行動する前に死亡フラグを立てるかどうか
+			if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+				|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
+				return (1);
+			// else if (philo->is_alive == IS_DEAD)
+			// 	return (printf("%ld %d died\n", timestamp(philo),
+			// 			philo->philo_id), 1);
+			printf("%ld %d is thinking\n", timestamp(philo), philo->philo_id);
+			philo->think_flag = THINKING;
+		}
+		usleep(10);
+	}
+	// left_forkの取得
+	while (1)
+	{
+		// 行動する前に死亡フラグを立てるかどうか
+		if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+			|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
+			return (1);
+		//
+		if (philo->l_fork->fork_state == DIRTY)
+		{
+			//　forkを取得
+			philo->l_fork->fork_state = CLEAN;
+			pthread_mutex_lock(&philo->l_fork->lock);
+			printf("%ld %d has taken a fork\n", timestamp(philo),
+				philo->philo_id);
+			// debug用で、forkのidを表示できる
+			// printf("%ld %d has taken a %d fork\n", timestamp(philo),
+			// 	philo->philo_id, philo->l_fork->fork_id);
+			break ;
+		}
+		if (philo->think_flag == NOT_THINK)
+		{
+			// 行動する前に死亡フラグを立てるかどうか
+			if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+				|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
+				return (1);
+			//
+			printf("%ld %d is thinking\n", timestamp(philo), philo->philo_id);
+			philo->think_flag = THINKING;
+		}
+		usleep(10);
 	}
 	return (0);
 }
 
-void init_dining(t_dining *dining)
+int	ft_eat(t_philo *philo)
 {
-	dining->philos = NULL;
-	dining->forks = NULL;
-	dining->num_of_philos = 0;
-	dining->time_to_die = 0;
-	dining->time_to_eat = 0;
-	dining->time_to_sleep = 0;
-	dining->must_eat = 0;
-	dining->all_ate = 0;
-	dining->is_alive = IS_ALIVE;
+	// 行動する前に死亡フラグを立てるかどうか
+	if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+		|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
+		return (1);
+	//
+	// 食事を行うので、meal_timeを更新
+	philo->meal_timelog = timestamp(philo);
+	// printf("\nphilo %d meal_timelog: %ld\n", philo->philo_id,
+	// philo->meal_timelog);
+	//
+	// 食事を行う
+	printf("%ld %d is eating\n", timestamp(philo), philo->philo_id);
+	usleep(((t_dining *)philo->ptr_dining)->time_to_eat * 1000);
+	//
+	// mutexをunlockし、think_flagを初期化する
+	pthread_mutex_unlock(&philo->r_fork->lock);
+	philo->r_fork->fork_state = DIRTY;
+	pthread_mutex_unlock(&philo->l_fork->lock);
+	philo->l_fork->fork_state = DIRTY;
+	philo->think_flag = NOT_THINK;
+	pthread_mutex_lock(&philo->eaten_count_lock);
+	philo->eaten_count++;
+	pthread_mutex_unlock(&philo->eaten_count_lock);
+	return (0);
 }
 
-int	main(int argc, char *argv[])
+int	ft_sleep(t_philo *philo)
 {
-	t_dining dining;
-	
-	memset((void *)&dining, 0, sizeof(dining));
-	init_dining(&dining);
-	if (argc != 5 && argc != 6)
-		return (arguments_error(argc, argv), -1);
-	if (handle_arguments(argc, argv, &dining) == -1)
-		return (arguments_error(argc, argv), -1);
-	launch_dining_philosopher(&dining);
-
-	// freeする
-	if (dining.forks != NULL)
-		free(dining.forks);
-	if (dining.philos != NULL)
-		free(dining.philos);
-	// test関数
-	// test_handle_arguments(&dining);
+	// 行動する前に死亡フラグを立てるかどうか
+	if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+		|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
+		return (1);
+	//
+	// sleepを入れる
+	printf("%ld %d is sleeping\n", timestamp(philo), philo->philo_id);
+	usleep(((t_dining *)philo->ptr_dining)->time_to_sleep * 1000);
 	return (0);
 }
