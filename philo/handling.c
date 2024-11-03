@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 19:47:26 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/19 19:47:39 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/03 22:34:20 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ int handle_arguments(int argc, char **argv, t_dining *dining)
 	}
 	else
 	{
+		return (-1);
+	}
+	if (dining->num_of_philos == 0)
+		return (-1);
+	return (0);
+}
+
+int handle_dining_conditions(t_dining *dining)
+{
+	if (dining->must_eat == 0)
+		return (-1);
+	else if (dining->time_to_die == 0)
+	{
+		printf("0 0 died\n");
 		return (-1);
 	}
 	return (0);

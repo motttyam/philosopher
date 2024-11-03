@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/21 10:46:59 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/03 21:59:24 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	*th_philosopher(void *philo)
 {
 	if (((t_philo *)philo)->philo_id % 2 != 0)
 		usleep(500);
-	for (int i = 0; i < 3; i++)
+	while (1)
 	{
 		if (ft_think(philo) == 1)
 			break ;
@@ -33,19 +33,18 @@ int	ft_think(t_philo *philo)
 	while (1)
 	{
 		// 行動する前に死亡フラグを立てるかどうか
-		if (philo->is_alive == IS_DEAD)
-			return (printf("%ld %d died\n", timestamp(philo), philo->philo_id),
-				1);
-		else if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
+		if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+			|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
 			return (1);
+		//
 		if (philo->r_fork->fork_state == DIRTY)
 		{
-			//
 			//　forkを取得
 			philo->r_fork->fork_state = CLEAN;
 			pthread_mutex_lock(&philo->r_fork->lock);
 			printf("%ld %d has taken a fork\n", timestamp(philo),
 				philo->philo_id);
+			// debug用で、forkのidを表示できる
 			// printf("%ld %d has taken a %d fork\n", timestamp(philo),
 			// 	philo->philo_id, philo->r_fork->fork_id);
 			break ;
@@ -53,11 +52,12 @@ int	ft_think(t_philo *philo)
 		if (philo->think_flag == NOT_THINK)
 		{
 			// 行動する前に死亡フラグを立てるかどうか
-			if (philo->is_alive == IS_DEAD)
-				return (printf("%ld %d died\n", timestamp(philo),
-						philo->philo_id), 1);
-			else if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
+			if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+				|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
 				return (1);
+			// else if (philo->is_alive == IS_DEAD)
+			// 	return (printf("%ld %d died\n", timestamp(philo),
+			// 			philo->philo_id), 1);
 			printf("%ld %d is thinking\n", timestamp(philo), philo->philo_id);
 			philo->think_flag = THINKING;
 		}
@@ -67,19 +67,18 @@ int	ft_think(t_philo *philo)
 	while (1)
 	{
 		// 行動する前に死亡フラグを立てるかどうか
-		if (philo->is_alive == IS_DEAD)
-			return (printf("%ld %d died\n", timestamp(philo), philo->philo_id),
-				1);
-		else if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
+		if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+			|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
 			return (1);
+		//
 		if (philo->l_fork->fork_state == DIRTY)
 		{
-			//
 			//　forkを取得
 			philo->l_fork->fork_state = CLEAN;
 			pthread_mutex_lock(&philo->l_fork->lock);
 			printf("%ld %d has taken a fork\n", timestamp(philo),
 				philo->philo_id);
+			// debug用で、forkのidを表示できる
 			// printf("%ld %d has taken a %d fork\n", timestamp(philo),
 			// 	philo->philo_id, philo->l_fork->fork_id);
 			break ;
@@ -87,11 +86,10 @@ int	ft_think(t_philo *philo)
 		if (philo->think_flag == NOT_THINK)
 		{
 			// 行動する前に死亡フラグを立てるかどうか
-			if (philo->is_alive == IS_DEAD)
-				return (printf("%ld %d died\n", timestamp(philo),
-						philo->philo_id), 1);
-			else if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
+			if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+				|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
 				return (1);
+			//
 			printf("%ld %d is thinking\n", timestamp(philo), philo->philo_id);
 			philo->think_flag = THINKING;
 		}
@@ -103,9 +101,8 @@ int	ft_think(t_philo *philo)
 int	ft_eat(t_philo *philo)
 {
 	// 行動する前に死亡フラグを立てるかどうか
-	if (philo->is_alive == IS_DEAD)
-		return (printf("%ld %d died\n", timestamp(philo), philo->philo_id), 1);
-	else if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
+	if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+		|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
 		return (1);
 	//
 	// 食事を行うので、meal_timeを更新
@@ -123,15 +120,17 @@ int	ft_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->l_fork->lock);
 	philo->l_fork->fork_state = DIRTY;
 	philo->think_flag = NOT_THINK;
+	pthread_mutex_lock(&philo->eaten_count_lock);
+	philo->eaten_count++;
+	pthread_mutex_unlock(&philo->eaten_count_lock);
 	return (0);
 }
 
 int	ft_sleep(t_philo *philo)
 {
 	// 行動する前に死亡フラグを立てるかどうか
-	if (philo->is_alive == IS_DEAD)
-		return (printf("%ld %d died\n", timestamp(philo), philo->philo_id), 1);
-	else if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
+	if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
+		|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
 		return (1);
 	//
 	// sleepを入れる

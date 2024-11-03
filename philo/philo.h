@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/21 10:39:52 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/03 22:33:54 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef struct s_philo
 	int				eaten_count;
 	int				is_alive;
 	pthread_mutex_t	alive_lock;
+	pthread_mutex_t	eaten_count_lock;
 }					t_philo;
 
 typedef struct s_dining
@@ -80,14 +81,17 @@ typedef struct s_dining
 	int				all_ate;
 	int				is_alive;
 	pthread_mutex_t	alive_lock;
+	pthread_mutex_t	all_ate_lock;
 }					t_dining;
 
 // main
 void				launch_dining_philosopher(t_dining *dining);
+void				monitor_philosophers(t_dining *dining);
 long				timestamp(t_philo *philo);
 
 // handling
 int					handle_arguments(int argc, char **argv, t_dining *dining);
+int					handle_dining_conditions(t_dining *dining);
 
 // init_dining
 void				init_dining(t_dining *dining);

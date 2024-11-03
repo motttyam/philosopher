@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:58:32 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/10/20 17:43:46 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/03 22:37:22 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ int	main(int argc, char *argv[])
 	// 引数がすべて数字であるかハンドリング
 	if (handle_arguments(argc, argv, &dining) == -1)
 		return (arguments_error(argc, argv), -1);
+	//  引数がアホなときのハンドリング
+	if (handle_dining_conditions(&dining) == -1)
+		return (0);
 	launch_dining_philosopher(&dining);
 	// dining構造体はstackで取得しているが、forksとphiloは動的に取得しているためfreeが必要
 	if (dining.forks != NULL)
@@ -55,34 +58,8 @@ void	launch_dining_philosopher(t_dining *dining)
 			return (perror("pthread_create failed"));
 		i++;
 	}
-	while (1)
-	{
-		i = 0;
-		dining->all_ate = 0;
-		while (i < dining->num_of_philos)
-		{
-			philo = &dining->philos[i];
-			// 餓死時間 < 現時刻 - 最後の食事時間であれば死亡フラグを立てる
-			if (dining->time_to_die < timestamp(philo) - philo->meal_timelog)
-			{
-				pthread_mutex_lock(&dining->alive_lock);
-				pthread_mutex_lock(&philo->alive_lock);
-				philo->is_alive = IS_DEAD;
-				dining->is_alive = IS_DEAD;
-				pthread_mutex_unlock(&philo->alive_lock);
-				pthread_mutex_unlock(&dining->alive_lock);
-				break ;
-			}
-			// // 規定食事回数 >= 現在の食事回数であればall_ateフラグを加算する
-			// //
-			// if (dining->must_eat >= philo->eaten_count)
-			// 	dining->all_ate++;
-			i++;
-		}
-		// // 哲学者が規定された回数食事していれば終了(all_ateの数がnum_of_philosと同じ場合、処理を抜ける)
-		// if (dining->all_ate == dining->num_of_philos)
-		// 	break ;
-	}
+	monitor_philosophers(dining);
+	printf("mainが終了しました\n");
 	for (i = 0; i < dining->num_of_philos; i++)
 	{
 		pthread_join(dining->philos[i].th, NULL);
@@ -97,4 +74,48 @@ long	timestamp(t_philo *philo)
 	gettimeofday(&tv, NULL);
 	current_time = (tv.tv_sec * 1000L) + (tv.tv_usec / 1000L);
 	return (current_time - ((t_dining *)philo->ptr_dining)->start_time);
+}
+
+void	monitor_philosophers(t_dining *dining)
+{
+	int i;
+	int ate;
+	t_philo *philo;
+	
+	while (1)
+	{
+		i = 0;
+		ate = 0; 
+		while (i < dining->num_of_philos)
+		{
+			philo = &dining->philos[i];
+			// 餓死時間 < 現時刻 - 最後の食事時間であれば死亡フラグを立てる
+			if (dining->time_to_die <= timestamp(philo) - philo->meal_timelog)
+			{
+				pthread_mutex_lock(&dining->alive_lock);
+				pthread_mutex_lock(&philo->alive_lock);
+				philo->is_alive = IS_DEAD;
+				dining->is_alive = IS_DEAD;
+				pthread_mutex_unlock(&philo->alive_lock);
+				pthread_mutex_unlock(&dining->alive_lock);
+				printf("%ld %d died\n", timestamp(philo), philo->philo_id);
+				return ;
+			}
+			// 規定食事回数 >= 現在の食事回数であればall_ateフラグを加算する
+			if (dining->must_eat != -1 && dining->must_eat <= philo->eaten_count)
+			{
+				// printf("id: %d | ate: %d\n", philo->philo_id, ++ate);
+				ate++;
+			}
+			i++;
+		}
+		// 哲学者が規定された回数食事していれば終了(all_ateの数がnum_of_philosと同じ場合、処理を抜ける)
+		if (ate == dining->num_of_philos)
+		{
+			pthread_mutex_lock(&dining->all_ate_lock);
+			dining->all_ate = ATE;
+			pthread_mutex_unlock(&dining->all_ate_lock);
+			return ;
+		}
+	}
 }
