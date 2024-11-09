@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:26 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/03 23:30:54 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:12:01 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	init_each_philosopher(t_dining *dining, int *i)
 	dining->philos[*i].meal_timelog = 0;
 	pthread_mutex_init(&dining->philos[*i].alive_lock, NULL);
 	pthread_mutex_init(&dining->philos[*i].eaten_count_lock, NULL);
+	pthread_mutex_init(&dining->philos[*i].meal_timelog_lock, NULL);
 	dining->philos[*i].ptr_dining = (void *)dining;
 	dining->philos[*i].eaten_count = 0;
 	dining->philos[*i].is_alive = IS_ALIVE;

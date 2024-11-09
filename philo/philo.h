@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/04 00:02:55 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:11:38 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef enum e_ate_state
 typedef enum e_death_state
 {
 	IS_ALIVE = 0,
-	IS_DEAD
+	IS_DEAD = 1,
 }					t_death_state;
 
 typedef enum e_think_state
@@ -66,6 +66,7 @@ typedef struct s_philo
 	int				is_alive;
 	pthread_mutex_t	alive_lock;
 	pthread_mutex_t	eaten_count_lock;
+	pthread_mutex_t	meal_timelog_lock;
 }					t_philo;
 
 typedef struct s_dining
@@ -120,6 +121,7 @@ size_t				ft_strlen(const char *s);
 int					ft_isdigit(int c);
 int					ft_strdigit(char *str);
 long				timestamp(t_philo *philo);
+int					validate_death_state(t_philo *philo);
 
 // test
 void				test_handle_arguments(t_dining *dining);

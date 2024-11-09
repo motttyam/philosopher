@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 23:44:20 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/03 23:44:51 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:31:38 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ void	monitor_philosophers(t_dining *dining)
 			philo = &dining->philos[i];
 			if (monitor_philosopher_death_state(dining, philo) == 1)
 				return ;
+			pthread_mutex_lock(&philo->eaten_count_lock);
 			if (dining->must_eat != -1
 				&& dining->must_eat <= philo->eaten_count)
 				ate++;
+			pthread_mutex_unlock(&philo->eaten_count_lock);
 			i++;
 		}
 		if (monitor_philosopher_eat_state(dining, ate) == 1)
@@ -40,8 +42,10 @@ void	monitor_philosophers(t_dining *dining)
 
 int	monitor_philosopher_death_state(t_dining *dining, t_philo *philo)
 {
+	pthread_mutex_lock(&philo->meal_timelog_lock);
 	if (dining->time_to_die <= timestamp(philo) - philo->meal_timelog)
 	{
+		pthread_mutex_unlock(&philo->meal_timelog_lock);
 		pthread_mutex_lock(&dining->alive_lock);
 		pthread_mutex_lock(&philo->alive_lock);
 		philo->is_alive = IS_DEAD;
@@ -51,6 +55,7 @@ int	monitor_philosopher_death_state(t_dining *dining, t_philo *philo)
 		printf("%ld %d died\n", timestamp(philo), philo->philo_id);
 		return (1);
 	}
+	pthread_mutex_unlock(&philo->meal_timelog_lock);
 	return (0);
 }
 
