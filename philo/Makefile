@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
-CSANITISE = -g -fsanitize=address
+# CSANITISE = -g -fsanitize=address
 PTHREAD = -pthread
 
 SRCS = $(wildcard *.c)
