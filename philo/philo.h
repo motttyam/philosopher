@@ -6,13 +6,14 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/09 18:11:38 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:32:34 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# define SLEEP_INTERVAL 400
 # include <limits.h>
 # include <pthread.h>
 # include <stdio.h>

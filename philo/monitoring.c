@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 23:44:20 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/09 18:31:38 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:47:33 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,20 @@ void	monitor_philosophers(t_dining *dining)
 		}
 		if (monitor_philosopher_eat_state(dining, ate) == 1)
 			return ;
-		usleep(10);
+		usleep(SLEEP_INTERVAL);
 	}
 }
 
 int	monitor_philosopher_death_state(t_dining *dining, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->meal_timelog_lock);
-	if (dining->time_to_die <= timestamp(philo) - philo->meal_timelog)
+	if (dining->time_to_die < timestamp(philo) - philo->meal_timelog)
 	{
 		pthread_mutex_unlock(&philo->meal_timelog_lock);
 		pthread_mutex_lock(&dining->alive_lock);
-		pthread_mutex_lock(&philo->alive_lock);
-		philo->is_alive = IS_DEAD;
 		dining->is_alive = IS_DEAD;
-		pthread_mutex_unlock(&philo->alive_lock);
 		pthread_mutex_unlock(&dining->alive_lock);
+		usleep(SLEEP_INTERVAL);
 		printf("%ld %d died\n", timestamp(philo), philo->philo_id);
 		return (1);
 	}

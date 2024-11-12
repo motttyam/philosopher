@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 00:02:19 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/09 18:03:03 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:48:56 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,18 @@ long	timestamp(t_philo *philo)
 int	validate_death_state(t_philo *philo)
 {
 	pthread_mutex_lock(&((t_dining *)philo->ptr_dining)->alive_lock);
-	pthread_mutex_lock(&((t_dining *)philo->ptr_dining)->all_ate_lock);
-	if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD
-		|| ((t_dining *)philo->ptr_dining)->all_ate == ATE)
+	if (((t_dining *)philo->ptr_dining)->is_alive == IS_DEAD)
 	{
 		pthread_mutex_unlock(&((t_dining *)philo->ptr_dining)->alive_lock);
-		pthread_mutex_unlock(&((t_dining *)philo->ptr_dining)->all_ate_lock);
 		return (IS_DEAD);
 	}
 	pthread_mutex_unlock(&((t_dining *)philo->ptr_dining)->alive_lock);
+	pthread_mutex_lock(&((t_dining *)philo->ptr_dining)->all_ate_lock);
+	if (((t_dining *)philo->ptr_dining)->all_ate == ATE)
+	{
+		pthread_mutex_unlock(&((t_dining *)philo->ptr_dining)->all_ate_lock);
+		return (IS_DEAD);
+	}
 	pthread_mutex_unlock(&((t_dining *)philo->ptr_dining)->all_ate_lock);
 	return (IS_ALIVE);
 }
