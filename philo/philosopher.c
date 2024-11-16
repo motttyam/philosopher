@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/16 18:28:12 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 18:42:00 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	think(t_philo *philo)
 {
 	if (philo->think_flag == NOT_THINK)
 	{
-		printf("%ld %d ", timestamp(philo), philo->philo_id);
 		print_log("is thinking\n", philo);
 		philo->think_flag = THINKING;
 	}
