@@ -2,6 +2,8 @@ CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 # CSANITISE = -g -fsanitize=address
 PTHREAD = -pthread
+# PTHREADFALGS = -g -fsanitize=thread
+# setarch $(uname -m) -R ./philo ...
 
 SRCS = $(wildcard *.c)
 
@@ -12,10 +14,10 @@ NAME = philo
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(CSANITISE) $(PTHREAD) -o $@ $^
+	$(CC) $(CFLAGS) $(CSANITISE) $(PTHREAD) $(PTHREADFALGS) -o $@ $^
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(CSANITISE) $(PTHREAD) -c $< -o $@
+	$(CC) $(CFLAGS) $(CSANITISE) $(PTHREAD) $(PTHREADFALGS) -c $< -o $@
 
 clean: 
 	rm -f $(OBJS)

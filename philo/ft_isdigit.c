@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:25:45 by motttyam          #+#    #+#             */
-/*   Updated: 2024/11/03 23:16:14 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 18:02:31 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_strdigit(char *str)
 	int	len;
 	int	i;
 
-	if (str == NULL)
+	if (str == NULL || *str == '\0')
 		return (0);
 	i = 0;
 	len = ft_strlen(str);

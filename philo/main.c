@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:58:32 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/04 00:02:04 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:41:58 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	main(int argc, char *argv[])
 {
 	t_dining	dining;
 
-	memset((void *)&dining, 0, sizeof(dining));
 	init_dining(&dining);
 	if (argc != 5 && argc != 6)
 		return (arguments_error(argc, argv), -1);
