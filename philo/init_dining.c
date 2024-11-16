@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:26 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/13 00:33:21 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:32:44 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	init_dining(t_dining *dining)
 	dining->time_to_die = -1;
 	dining->time_to_eat = 0;
 	dining->time_to_sleep = 0;
+	dining->start_time = 0;
 	dining->must_eat = -1;
 	dining->all_ate = NOT_ATE;
 	dining->is_alive = IS_ALIVE;

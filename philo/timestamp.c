@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 00:02:19 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/16 16:17:20 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:27:19 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ long	timestamp(t_philo *philo)
 	return (current_time - ((t_dining *)philo->ptr_dining)->start_time);
 }
 
-void	precise_usleep(useconds_t time)
+void	precise_usleep(int time)
 {
 	struct timeval	tv;
 	long			end_time;
