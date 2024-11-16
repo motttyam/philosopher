@@ -1,4 +1,4 @@
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Werror -Wextra
 # CSANITISE = -g -fsanitize=address
 PTHREAD = -pthread
