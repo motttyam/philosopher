@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 00:02:19 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/13 00:48:56 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:17:20 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,27 @@ long	timestamp(t_philo *philo)
 	gettimeofday(&tv, NULL);
 	current_time = (tv.tv_sec * 1000L) + (tv.tv_usec / 1000L);
 	return (current_time - ((t_dining *)philo->ptr_dining)->start_time);
+}
+
+void	precise_usleep(useconds_t time)
+{
+	struct timeval	tv;
+	long			end_time;
+	long			current_time;
+
+	gettimeofday(&tv, NULL);
+	end_time = (tv.tv_sec * 1000000L) + tv.tv_usec + time;
+	current_time = (tv.tv_sec * 1000000L) + tv.tv_usec;
+	while (end_time > current_time)
+	{
+		usleep(time / 2);
+		if (time > 100)
+			time /= 2;
+		else
+			time = 100;
+		gettimeofday(&tv, NULL);
+		current_time = (tv.tv_sec * 1000000L) + tv.tv_usec;
+	}
 }
 
 int	validate_death_state(t_philo *philo)

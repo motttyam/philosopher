@@ -6,14 +6,14 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 20:56:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/13 00:32:34 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:19:15 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define SLEEP_INTERVAL 400
+# define SLEEP_INTERVAL 100
 # include <limits.h>
 # include <pthread.h>
 # include <stdio.h>
@@ -122,6 +122,7 @@ size_t				ft_strlen(const char *s);
 int					ft_isdigit(int c);
 int					ft_strdigit(char *str);
 long				timestamp(t_philo *philo);
+void				precise_usleep(useconds_t time);
 int					validate_death_state(t_philo *philo);
 
 // test
