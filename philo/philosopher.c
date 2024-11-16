@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:08:16 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/16 16:18:57 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 18:28:12 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	take_a_fork(t_philo *philo, t_fork *fork)
 	{
 		fork->fork_state = CLEAN;
 		pthread_mutex_unlock(&fork->lock);
-		printf("%ld %d has taken a fork\n", timestamp(philo), philo->philo_id);
+		print_log("has taken a fork\n", philo);
 		return (1);
 	}
 	pthread_mutex_unlock(&fork->lock);
@@ -59,7 +59,8 @@ int	think(t_philo *philo)
 {
 	if (philo->think_flag == NOT_THINK)
 	{
-		printf("%ld %d is thinking\n", timestamp(philo), philo->philo_id);
+		printf("%ld %d ", timestamp(philo), philo->philo_id);
+		print_log("is thinking\n", philo);
 		philo->think_flag = THINKING;
 	}
 	return (0);
@@ -72,8 +73,8 @@ int	eat(t_philo *philo)
 	pthread_mutex_lock(&philo->meal_timelog_lock);
 	philo->meal_timelog = timestamp(philo);
 	pthread_mutex_unlock(&philo->meal_timelog_lock);
-	printf("%ld %d is eating\n", timestamp(philo), philo->philo_id);
-	precise_usleep(((t_dining *)philo->ptr_dining)->time_to_eat * 1000);
+	print_log("is eating\n", philo);
+	precise_usleep(((t_dining *)philo->ptr_dining)->time_to_eat * 1000, philo);
 	pthread_mutex_lock(&philo->r_fork->lock);
 	philo->r_fork->fork_state = DIRTY;
 	pthread_mutex_unlock(&philo->r_fork->lock);
@@ -91,7 +92,8 @@ int	ft_sleep(t_philo *philo)
 {
 	if (validate_death_state(philo) == IS_DEAD)
 		return (1);
-	printf("%ld %d is sleeping\n", timestamp(philo), philo->philo_id);
-	precise_usleep(((t_dining *)philo->ptr_dining)->time_to_sleep * 1000);
+	print_log("is sleeping\n", philo);
+	precise_usleep(((t_dining *)philo->ptr_dining)->time_to_sleep * 1000,
+		philo);
 	return (0);
 }

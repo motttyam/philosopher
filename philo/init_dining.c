@@ -6,7 +6,7 @@
 /*   By: ktsukamo <ktsukamo@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:26 by ktsukamo          #+#    #+#             */
-/*   Updated: 2024/11/16 16:32:44 by ktsukamo         ###   ########.fr       */
+/*   Updated: 2024/11/16 18:16:47 by ktsukamo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	init_dining(t_dining *dining)
 	dining->is_alive = IS_ALIVE;
 	pthread_mutex_init(&dining->alive_lock, NULL);
 	pthread_mutex_init(&dining->all_ate_lock, NULL);
+	pthread_mutex_init(&dining->printf_lock, NULL);
 }
 
 int	init_forks(t_dining *dining)

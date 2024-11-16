@@ -1,8 +1,8 @@
-CC = cc
+CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 # CSANITISE = -g -fsanitize=address
 PTHREAD = -pthread
-PTHREADFALGS = -g -fsanitize=thread
+# PTHREADFALGS = -g -fsanitize=thread
 # setarch $(uname -m) -R ./philo ...
 
 SRCS = $(wildcard *.c)
