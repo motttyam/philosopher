@@ -1,11 +1,22 @@
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Werror -Wextra
 # CSANITISE = -g -fsanitize=address
 PTHREAD = -pthread
 # PTHREADFALGS = -g -fsanitize=thread
 # setarch $(uname -m) -R ./philo ...
 
-SRCS = $(wildcard *.c)
+SRCS = error.c \
+       monitoring.c \
+       main.c \
+       init_dining.c \
+       handling.c \
+       func_test.c \
+       ft_strlen.c \
+       ft_isdigit.c \
+       ft_atoi.c \
+       philosopher.c \
+       timestamp.c
+
 
 OBJS = $(SRCS:.c=.o)
 
